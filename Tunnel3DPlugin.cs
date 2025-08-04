@@ -1,6 +1,9 @@
 #if TOOLS
 using Godot;
 
+/// <summary>
+/// Class that loads and unloads <see cref="Tunnel3D"/> plugin and associated resources
+/// </summary>
 [Tool]
 public partial class Tunnel3DPlugin : EditorPlugin
 {

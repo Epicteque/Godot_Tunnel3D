@@ -33,7 +33,7 @@ public partial class Tunnel3D : Node3D
     // Either solution would block a thread anyway, so it isn't a big deal.
     private void WaitForCompletion()
     {
-        while (!PoolFinished || generatorRunFlag)
+        while (!PoolFinished || methodRunFlag)
         {
         }
     }
@@ -41,6 +41,7 @@ public partial class Tunnel3D : Node3D
 
     private void GenTunnelMesh()
     {
+        methodRunFlag = true;
         if (!IsNodeReady())
         {
             throw new Exception("Tunnel3D not initialised");
@@ -66,11 +67,12 @@ public partial class Tunnel3D : Node3D
         _meshData.TunnelMeshes.Resize(_voxelData.ChunkCount.X * _voxelData.ChunkCount.Y * _voxelData.ChunkCount.Z);
 
         taskID = WorkerThreadPool.AddGroupTask(Callable.From<int>(GenerateChunkMesh), _meshData.TunnelMeshes.Count);
+        methodRunFlag = false;
     }
 
     private async void GenTunnelData()
     {
-        generatorRunFlag = true;
+        methodRunFlag = true;
         if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
         if (_tunnelData is null) { throw new NullReferenceException("Tunnel3D Generation Data Resource is null"); }
         if (!(_generator is null))
@@ -86,7 +88,7 @@ public partial class Tunnel3D : Node3D
                 _tunnelData.TunnelNodes = new Vector3[0];
                 _tunnelData.AdjacencyMatrix = new byte[0];
                 _tunnelData.WeightMatrix = new float[0];
-                generatorRunFlag = false;
+                methodRunFlag = false;
                 GD.PushWarning("Tunnel3D Data Generator generates zero nodes. Generating empty Generation Data Resource.");
                 return;
             }
@@ -99,11 +101,12 @@ public partial class Tunnel3D : Node3D
         {
             throw new Exception("Tunnel3D Generation Data Resource data is incomplete.");
         }
-        generatorRunFlag = false;
+        methodRunFlag = false;
     }
 
     private void GenMeshChildren()
     {
+        methodRunFlag = true;
         if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
         if (tunnelContainer.GetParent() is null) { AddChild(tunnelContainer); }
         if (_meshData is null) { throw new NullReferenceException("Tunnel3D Mesh Data Resource is null"); }
@@ -136,17 +139,30 @@ public partial class Tunnel3D : Node3D
             chunks[i] = new MeshInstance3D { Mesh = _meshData.TunnelMeshes[i], MaterialOverride = _meshData.TunnelMaterial, Position = GetRealCoordinateChunkOffsetFromChunkIndex(i) };
 
             tunnelContainer.AddChild(chunks[i]);
-            if (_generateCollisionMeshes)
-            {
-                chunks[i].CreateTrimeshCollision();
-                ((StaticBody3D)chunks[i].GetChild(0)).CollisionLayer = _collisionLayer;
-                ((StaticBody3D)chunks[i].GetChild(0)).CollisionMask = _collisionMask;
-            }
+
         }
+
+        if (!_generateCollisionMeshes) { return; }
+
+        Callable collisionGen = Callable.From<int>((i) =>
+        {
+            try // Return if empty/null
+            {
+                if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { return; }
+            }
+            catch { return; }
+            chunks[i].CreateTrimeshCollision(); // Really expensive
+            ((StaticBody3D)chunks[i].GetChild(0)).CollisionLayer = _collisionLayer;
+            ((StaticBody3D)chunks[i].GetChild(0)).CollisionMask = _collisionMask;
+        });
+
+        taskID = WorkerThreadPool.AddGroupTask(Callable.From<int>(GenerateChunkMesh), chunkCount);
+        methodRunFlag = false;
     }
 
     private void DestroyChildren()
     {
+        methodRunFlag = true;
         if (!IsNodeReady())
         {
             throw new Exception("Tunnel3D not initialised");
@@ -157,10 +173,12 @@ public partial class Tunnel3D : Node3D
             tunnelContainer.RemoveChild(child);
             child.Free();
         }
+        methodRunFlag = false;
     }
 
     private void GenVoxelData()
     {
+        methodRunFlag = true;
         if (!IsNodeReady())
         {
             throw new Exception("Tunnel3D not initialised");
@@ -227,6 +245,7 @@ public partial class Tunnel3D : Node3D
         taskID = WorkerThreadPool.AddGroupTask(call, tunnels.Count);
 
         _voxelData.VoxelWeights = weights;
+        methodRunFlag = false;
     }
 
 

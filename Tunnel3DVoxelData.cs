@@ -1,7 +1,6 @@
 using Godot;
-using System;
 /// <summary>
-/// <para>Tunnel3DVoxelData is the <see cref="Godot.Resource"/> responsible for storing all voxel and chunk data used in <see cref="Tunnel3DPlugin"/> instances to generate tunnel meshes.</para>
+/// <para>Responsible for storing all voxel and chunk data used in generating <see cref="Tunnel3DMeshData"/> instances to generate tunnel meshes.</para>
 /// </summary>
 public partial class Tunnel3DVoxelData : Resource
 {
@@ -30,10 +29,12 @@ public partial class Tunnel3DVoxelData : Resource
     public byte[] VoxelWeights { get; set; }
 
     [ExportSubgroup("Mesh Generator")]
-
     [Export(PropertyHint.Range, "0,1")]
     public float TunnelLevel { get; set; } = 0.5f;
 
+    /// <summary>
+    /// Inverts tunnel weights being read to create the tunnel. Example: 255 -> 0, 0 -> 255, 55 -> 200
+    /// </summary>
     [Export]
     public bool InvertTunnel { get; set; } = false;
 

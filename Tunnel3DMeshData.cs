@@ -1,6 +1,6 @@
 using Godot;
 /// <summary>
-/// <para>TunnelMeshData is the <see cref="Godot.Resource"/> responsible for storing all chunk data used in <see cref="Tunnel3DPlugin"/> instances.</para>
+/// <para>Responsible for storing all mesh data used in <see cref="Tunnel3D"/> nodes.</para>
 /// </summary>
 public partial class Tunnel3DMeshData : Resource
 {
@@ -16,6 +16,6 @@ public partial class Tunnel3DMeshData : Resource
     [Export]
     public BaseMaterial3D TunnelMaterial { get; set; }
 
-
+    
 
 }

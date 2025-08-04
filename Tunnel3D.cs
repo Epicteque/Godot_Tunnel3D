@@ -2,8 +2,11 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-[Tool]
 
+/// <summary>
+/// Generates 3D tunnels based on input parameters.
+/// </summary>
+[Tool]
 public partial class Tunnel3D : Node3D
 {
     private Tunnel3DMeshData _meshData = new Tunnel3DMeshData();
@@ -20,40 +23,49 @@ public partial class Tunnel3D : Node3D
     private readonly object lockObj = new object(); // no Lock class in .NET 8
     private bool doingTasks = false;
     private long taskID = 0;
-    private bool generatorRunFlag = false;
+    private bool methodRunFlag = false;
 
+    /// <summary>
+    /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Generation_Data"/>
+    /// </summary>
     [ExportGroup("Tunnel Data")]
-
     [Export]
     public Resource Connection_Generator // Can't be set to Tunnel3DGenerationData due to editor limitations.
     {
         get { return _generator; }
         set { _generator = value as Tunnel3DConnectionGenerator; } // Workaround due to editor not considering "Tunnel3DConnectionGenerator" it's own type.
     }
-
+    /// <summary>
+    /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Voxel_Data"/>
+    /// </summary>
     [Export]
     public Resource Tunnel_Generation_Data // Same here.
     {
         get { return _tunnelData; }
-        set { _tunnelData = value as Tunnel3DGenerationData; } 
+        set { _tunnelData = value as Tunnel3DGenerationData; }
     }
-
+    /// <summary>
+    /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Mesh_Data"/>
+    /// </summary>
     [Export]
     public Resource Tunnel_Voxel_Data // Same here.
     {
         get { return _voxelData; }
         set { _voxelData = value as Tunnel3DVoxelData; }
     }
-
+    /// <summary>
+    /// Resource that stores data that displays the tunnel meshes.
+    /// </summary>
     [Export]
     public Resource Tunnel_Mesh_Data // you get the idea
     {
         get { return _meshData; }
         set { _meshData = value as Tunnel3DMeshData; }
     }
-
+    /// <summary>
+    /// Generate Trimesh collisions for each chunk. <see cref="Tunnel3D.GenerateMeshChildren"/> will need to be called after setting.
+    /// </summary>
     [ExportGroup("Tunnel Options")]
-
     [ExportSubgroup("Physics")]
     [Export]
     public bool Generate_Collision_Meshes
@@ -61,59 +73,87 @@ public partial class Tunnel3D : Node3D
         get { return _generateCollisionMeshes; }
         set { _generateCollisionMeshes = value; }
     }
-
+    /// <summary>
+    /// Collision Layer for generated collisions. <see cref="Tunnel3D.GenerateMeshChildren"/> will need to be called after setting.
+    /// </summary>
     [Export(PropertyHint.Layers3DPhysics)]
     public uint Collision_Layer
     {
         get { return _collisionLayer; }
         set { _collisionLayer = value; }
     }
-
+    /// <summary>
+    /// Collision Mask for generated collisions. <see cref="Tunnel3D.GenerateMeshChildren"/> will need to be called after setting.
+    /// </summary>
     [Export(PropertyHint.Layers3DPhysics)]
     public uint Collision_Mask
     {
         get { return _collisionMask; }
         set { _collisionMask = value; }
     }
-
-
-
+    /// <summary>
+    /// Callable that encapsulates <see cref="Tunnel3D.GenerateTunnelData"/>
+    /// </summary>
     [ExportGroup("Actions")]
-
     [ExportToolButton("Generate Tunnel Data")]
     public Callable GenerateTunnelDataCallable => Callable.From(() => QueueTask(GenTunnelData)); //GenTunnelData
+    /// <summary>
+    /// Callable that encapsulates <see cref="Tunnel3D.GenerateVoxelData"/>
+    /// </summary>
     [ExportToolButton("Generate Voxel Data")]
     public Callable GenerateVoxelDataCallable => Callable.From(() => QueueTask(GenVoxelData)); //GenVoxelData
+    /// <summary>
+    /// Callable that encapsulates <see cref="Tunnel3D.GenerateTunnelMesh"/>
+    /// </summary>
     [ExportToolButton("Generate Tunnel Mesh")]
     public Callable GenerateTunnelMeshCallable => Callable.From(() => QueueTask(GenTunnelMesh)); //GenTunnelMesh
+    /// <summary>
+    /// Callable that encapsulates <see cref="Tunnel3D.GenerateMeshChildren"/>
+    /// </summary>
     [ExportToolButton("Generate Mesh Children")]
     public Callable GenerateMeshChildrenCallable => Callable.From(() => QueueTask(GenMeshChildren)); //GenMeshChildren
+    /// <summary>
+    /// Callable that encapsulates <see cref="Tunnel3D.DestroyMeshChildren"/>
+    /// </summary>
     [ExportToolButton("Destroy Mesh Children")]
     public Callable DestroyMeshChildrenCallable => Callable.From(() => QueueTask(DestroyChildren)); //DestroyChildren
-
+    /// <summary>
+    /// Updates <see cref="Tunnel3D.Tunnel_Generation_Data"/> tunnel connections from data in <see cref="Tunnel3D.Connection_Generator"/>
+    /// </summary>
     public void GenerateTunnelData()
     {
         QueueTask(GenTunnelData);
     }
+    /// <summary>
+    /// Updates <see cref="Tunnel3D.Tunnel_Voxel_Data"/> voxel weights from data in <see cref="Tunnel3D.Tunnel_Generation_Data"/>
+    /// </summary>
     public void GenerateVoxelData()
     {
         QueueTask(GenVoxelData);
     }
+    /// <summary>
+    /// Updates <see cref="Tunnel3D.Tunnel_Mesh_Data"/> tunnel meshes from data in <see cref="Tunnel3D.Tunnel_Voxel_Data"/>
+    /// </summary>
     public void GenerateTunnelMesh()
     {
         QueueTask(GenTunnelMesh);
     }
+    /// <summary>
+    /// Generates children and displays the tunnel mesh and collisions (if input parameters specify)
+    /// </summary>
     public void GenerateMeshChildren()
     {
         QueueTask(GenMeshChildren);
     }
+    /// <summary>
+    /// Destroys children and removes the tunnel mesh and collisions
+    /// </summary>
     public void DestroyMeshChildren()
     {
         QueueTask(DestroyChildren);
     }
-
     /// <summary>
-    /// Stores the Volume Dimensions the collection of chunks occupy.
+    /// A read-only flag indicating if called methods have finished executing
     /// </summary>
     [Export]
     public bool Work_Finished
@@ -124,8 +164,6 @@ public partial class Tunnel3D : Node3D
 
     private bool PoolFinished
     {
-        //get { try { return WorkerThreadPool.IsGroupTaskCompleted(taskID); } catch { return true; } }
-
         get { if (taskID == 0) { return true; } else { return WorkerThreadPool.IsGroupTaskCompleted(taskID); } }
     }
 
