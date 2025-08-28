@@ -1,0 +1,63 @@
+[gd_resource type="StandardMaterial3D" load_steps=13 format=3 uid="uid://cfxff61lhtixg"]
+
+[sub_resource type="Gradient" id="Gradient_s3tr4"]
+offsets = PackedFloat32Array(0.0666667, 0.1, 1)
+colors = PackedColorArray(0.568627, 0.27451, 0.0509804, 1, 0.0862745, 0, 0.0509804, 1, 0.188235, 0.054902, 0.0431373, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_c776g"]
+noise_type = 0
+frequency = 0.018
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_qsw0l"]
+seamless = true
+color_ramp = SubResource("Gradient_s3tr4")
+noise = SubResource("FastNoiseLite_c776g")
+
+[sub_resource type="Gradient" id="Gradient_slcju"]
+offsets = PackedFloat32Array(0.482558, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s3tr4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c776g"]
+generate_mipmaps = false
+seamless = true
+color_ramp = SubResource("Gradient_slcju")
+noise = SubResource("FastNoiseLite_s3tr4")
+
+[sub_resource type="Gradient" id="Gradient_an2fx"]
+offsets = PackedFloat32Array(0.482558, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nm75f"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vl5u0"]
+generate_mipmaps = false
+seamless = true
+as_normal_map = true
+color_ramp = SubResource("Gradient_an2fx")
+noise = SubResource("FastNoiseLite_nm75f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qsw0l"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = SubResource("NoiseTexture2D_c776g")
+metallic = 1.0
+roughness = 0.25
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_vl5u0")
+uv1_triplanar = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_vravm"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_36eyb"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_vravm")
+
+[resource]
+next_pass = SubResource("StandardMaterial3D_qsw0l")
+albedo_texture = SubResource("NoiseTexture2D_qsw0l")
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_36eyb")
+uv1_triplanar = true

@@ -2,6 +2,7 @@ using Godot;
 /// <summary>
 /// <para>Responsible for storing all mesh data used in <see cref="Tunnel3D"/> nodes.</para>
 /// </summary>
+[Tool, GlobalClass]
 public partial class Tunnel3DMeshData : Resource
 {
     /// <summary>

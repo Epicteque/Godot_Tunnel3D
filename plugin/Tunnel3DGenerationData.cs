@@ -1,7 +1,9 @@
 using Godot;
+
 /// <summary>
 /// <para>Responsible for storing all data for generating <see cref="Tunnel3DVoxelData">.</para>
 /// </summary>
+[Tool, GlobalClass]
 public partial class Tunnel3DGenerationData : Resource
 {
     /// <summary>

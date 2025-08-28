@@ -2,6 +2,7 @@ using Godot;
 /// <summary>
 /// <para>Responsible for storing all voxel and chunk data used in generating <see cref="Tunnel3DMeshData"/> instances to generate tunnel meshes.</para>
 /// </summary>
+[Tool, GlobalClass]
 public partial class Tunnel3DVoxelData : Resource
 {
     /// <summary>

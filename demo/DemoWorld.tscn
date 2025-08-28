@@ -1,0 +1,88 @@
+[gd_scene load_steps=16 format=3 uid="uid://d003nyhug1o77"]
+
+[ext_resource type="Script" uid="uid://c0vwwtf0ay42f" path="res://addons/Tunnel3D/demo/DemoWorld.cs" id="1_7xu1f"]
+[ext_resource type="Script" uid="uid://bw6onojvu5lrk" path="res://addons/Tunnel3D/plugin/Tunnel3D.cs" id="2_k8svw"]
+[ext_resource type="Script" uid="uid://b0qihc36fagg5" path="res://addons/Tunnel3D/plugin/Tunnel3DConnectionGenerator.cs" id="3_kv4js"]
+[ext_resource type="Script" uid="uid://cex2vp0k2d4ew" path="res://addons/Tunnel3D/plugin/Tunnel3DGenerationData.cs" id="4_euer0"]
+[ext_resource type="Script" uid="uid://cvgfa01s255ng" path="res://addons/Tunnel3D/plugin/Tunnel3DVoxelData.cs" id="5_un4km"]
+[ext_resource type="Material" uid="uid://cfxff61lhtixg" path="res://addons/Tunnel3D/demo/TunnelMat.tres" id="6_pry2i"]
+[ext_resource type="Script" uid="uid://4m8fklwy12h0" path="res://addons/Tunnel3D/plugin/Tunnel3DMeshData.cs" id="7_bxqqp"]
+[ext_resource type="PackedScene" uid="uid://d2ioommj683li" path="res://addons/Tunnel3D/demo/DemoCharacterController.tscn" id="8_d1x6q"]
+
+[sub_resource type="Environment" id="Environment_gv5m4"]
+background_mode = 1
+background_color = Color(1, 1, 1, 1)
+background_energy_multiplier = 0.05
+tonemap_mode = 2
+tonemap_white = 5.0
+sdfgi_read_sky_light = false
+sdfgi_bounce_feedback = 1.99
+sdfgi_cascades = 1
+sdfgi_max_distance = 25.6
+glow_enabled = true
+glow_levels/1 = 4.0
+glow_strength = 0.8
+glow_blend_mode = 4
+
+[sub_resource type="Resource" id="Resource_17wc7"]
+script = ExtResource("3_kv4js")
+BoundsLowerCorner = Vector3(-15, -3, -15)
+BoundsUpperCorner = Vector3(15, 3, 15)
+PresetNodes = PackedVector3Array(0, 0, 0)
+GeneratedNodeCount = 5
+GeneratedConnectionCount = 8
+TestIntersections = true
+ThresholdRadius = 3.0
+Seed = 0
+NodeSeperationDistance = 4.0
+ElevationAspect = 1.0
+metadata/_custom_type_script = "uid://b0qihc36fagg5"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y15co"]
+
+[sub_resource type="Curve" id="Curve_1xq81"]
+_data = [Vector2(0.6, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_y15co"]
+script = ExtResource("4_euer0")
+Noise = SubResource("FastNoiseLite_y15co")
+NoiseIntensity = 0.4
+TunnelRadius = 1.3
+TunnelEaseFunction = SubResource("Curve_1xq81")
+TunnelNodes = PackedVector3Array()
+AdjacencyMatrix = PackedByteArray()
+WeightMatrix = PackedFloat32Array()
+metadata/_custom_type_script = "uid://cex2vp0k2d4ew"
+
+[sub_resource type="Resource" id="Resource_mawv4"]
+script = ExtResource("5_un4km")
+VolumeSize = Vector3(32, 8, 32)
+VoxelCount = Vector3i(32, 32, 32)
+ChunkCount = Vector3i(4, 1, 4)
+VoxelWeights = PackedByteArray()
+TunnelLevel = 0.5
+InvertTunnel = false
+
+[sub_resource type="Resource" id="Resource_qnw4b"]
+script = ExtResource("7_bxqqp")
+TunnelMeshes = []
+TunnelMaterial = ExtResource("6_pry2i")
+
+[node name="DemoWorld" type="Node3D"]
+script = ExtResource("1_7xu1f")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gv5m4")
+
+[node name="Tunnel3D" type="Node3D" parent="."]
+script = ExtResource("2_k8svw")
+Connection_Generator = SubResource("Resource_17wc7")
+Tunnel_Generation_Data = SubResource("Resource_y15co")
+Tunnel_Voxel_Data = SubResource("Resource_mawv4")
+Tunnel_Mesh_Data = SubResource("Resource_qnw4b")
+Generate_Collision_Meshes = true
+Work_Finished = true
+metadata/_custom_type_script = "uid://bw6onojvu5lrk"
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("8_d1x6q")]

@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://bwwlsnif0xjj0"]
+
+[ext_resource type="PackedScene" uid="uid://d3rpj4in7dq8e" path="res://addons/Tunnel3D/demo/light_fixture.glb" id="1_1jiul"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ybyrf"]
+frequency = 0.1445
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_42i5d"]
+generate_mipmaps = false
+as_normal_map = true
+bump_strength = 0.9
+noise = SubResource("FastNoiseLite_ybyrf")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_twl7i"]
+transparency = 1
+blend_mode = 3
+albedo_color = Color(1, 1, 0.784314, 1)
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_42i5d")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4n0l"]
+transparency = 1
+cull_mode = 2
+shading_mode = 2
+specular_mode = 2
+albedo_color = Color(0.294118, 0.294118, 0.294118, 0.298039)
+roughness = 0.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 80.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k6eah"]
+metallic = 1.0
+roughness = 0.25
+
+[node name="light_fixture" instance=ExtResource("1_1jiul")]
+
+[node name="Casing" parent="." index="0"]
+transform = Transform3D(0.2, 0, 0, 0, -0.2, 3.01992e-08, 0, -3.01992e-08, -0.2, 0, 0, 0)
+layers = 2
+
+[node name="Cover" parent="." index="1"]
+transform = Transform3D(0.2, 0, 0, 0, -0.2, 3.01992e-08, 0, -3.01992e-08, -0.2, 0, 0, 0)
+layers = 2
+surface_material_override/0 = SubResource("StandardMaterial3D_twl7i")
+
+[node name="Cage" parent="." index="2"]
+transform = Transform3D(0.2, 0, 0, 0, -0.2, 3.01992e-08, 0, -3.01992e-08, -0.2, 0, 0, 0)
+layers = 2
+
+[node name="Tube" parent="." index="3"]
+transform = Transform3D(0.2, 0, 0, 0, -0.2, 3.01992e-08, 0, -3.01992e-08, -0.2, 0, 0.004, 0)
+layers = 2
+surface_material_override/0 = SubResource("StandardMaterial3D_q4n0l")
+
+[node name="Reflector" parent="." index="4"]
+transform = Transform3D(0.2, 0, 0, 0, -0.2, 3.01992e-08, 0, -3.01992e-08, -0.2, 0, 0, 0)
+layers = 2
+surface_material_override/0 = SubResource("StandardMaterial3D_k6eah")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+light_color = Color(1, 1, 0.784314, 1)
+shadow_enabled = true
+spot_angle = 60.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.002, 0)
+light_color = Color(1, 1, 0.784314, 1)
+light_energy = 16.0
+light_cull_mask = 4294967294
+omni_range = 0.34
+omni_attenuation = 1.007

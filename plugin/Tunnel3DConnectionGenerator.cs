@@ -2,14 +2,13 @@ using Godot;
 /// <summary>
 /// <para>Responsible for storing data for generating <see cref="Tunnel3DGenerationData"/> based on input parameters</para>
 /// </summary>
+[Tool, GlobalClass]
 public partial class Tunnel3DConnectionGenerator : Resource
 {
     /// <summary>
     /// Defines the Lower Corner of the Bounding Box the tunnel nodes are to generate in.
     /// </summary>
-    [ExportGroup("Node Generation")]
-    [ExportSubgroup("Bounds")]
-    [Export]
+    [ExportGroup("Node Generation"), ExportSubgroup("Bounds"), Export]
     public Vector3 BoundsLowerCorner { get; set; } = new Vector3(-8, -8, -8);
     /// <summary>
     /// Defines the Upper Corner of the Bounding Box the tunnel nodes are to generate in.
@@ -19,8 +18,7 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// <summary>
     /// Node positions defined here will be included as nodes in the generated data
     /// </summary>
-    [ExportSubgroup("Nodes")]
-    [Export]
+    [ExportSubgroup("Nodes"), Export]
     public Vector3[] PresetNodes { get; set; }
     /// <summary>
     /// Count of nodes randomly generated in the tunnel system. Total node count includes <see cref="PresetNodes"/> and GeneratedNodeCount.
@@ -52,11 +50,9 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// </summary>
     [Export]
     public float NodeSeperationDistance { get; set; }
-
     /// <summary>
     /// Scales the calculated weights by the elevation angle between the two nodes. Higher values tend to reduce tunnel elevation in elevation to produce more a accessible tunnel system.
     /// </summary>
-    [ExportGroup("Weight Options")]
-    [Export(PropertyHint.Range, "0,1,0.01,or_greater")]
+    [ExportGroup("Weight Options"), Export(PropertyHint.Range, "0,1,0.01,or_greater")]
     public float ElevationAspect { get; set; }
 }

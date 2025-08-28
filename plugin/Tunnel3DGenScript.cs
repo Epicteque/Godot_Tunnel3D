@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 public partial class Tunnel3D : Node3D
 {
-
-
     private async void QueueTask(Action action)
     {
         if (taskQueue.Count == 0) { doingTasks = false; }
@@ -33,11 +31,8 @@ public partial class Tunnel3D : Node3D
     // Either solution would block a thread anyway, so it isn't a big deal.
     private void WaitForCompletion()
     {
-        while (!PoolFinished || methodRunFlag)
-        {
-        }
+        while (!PoolFinished || methodRunFlag) { }
     }
-
 
     private void GenTunnelMesh()
     {
@@ -78,6 +73,7 @@ public partial class Tunnel3D : Node3D
         if (!(_generator is null))
         {
             int count = _generator.GeneratedNodeCount;
+
             try
             {
                 count += _generator.PresetNodes.Length;
@@ -151,12 +147,15 @@ public partial class Tunnel3D : Node3D
                 if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { return; }
             }
             catch { return; }
-            chunks[i].CreateTrimeshCollision(); // Really expensive
+            chunks[i].CreateTrimeshCollision(); // Really expensive. Adds children, so must be run on main thread, meaning this is blocking.
             ((StaticBody3D)chunks[i].GetChild(0)).CollisionLayer = _collisionLayer;
             ((StaticBody3D)chunks[i].GetChild(0)).CollisionMask = _collisionMask;
         });
 
-        taskID = WorkerThreadPool.AddGroupTask(Callable.From<int>(GenerateChunkMesh), chunkCount);
+        for (int i = 0; i < chunkCount; i++)
+        {
+            collisionGen.CallDeferred(i); // CallDeferred to mitigate blocking, however blocking will still occur if meshes are sufficiently complex
+        }
         methodRunFlag = false;
     }
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cy2c2m4kmuwp3"
-path="res://.godot/imported/Tunnel3DIcon.png-eb5bd5a4afbb25ef079785680ae4429d.ctex"
+uid="uid://drfeqse0lnehl"
+path="res://.godot/imported/Tunnel3DDataIcon.png-f02b401fdeb8db90238371e936734b00.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Tunnel3D/Tunnel3DIcon.png"
-dest_files=["res://.godot/imported/Tunnel3DIcon.png-eb5bd5a4afbb25ef079785680ae4429d.ctex"]
+source_file="res://addons/Tunnel3D/plugin/Tunnel3DDataIcon.png"
+dest_files=["res://.godot/imported/Tunnel3DDataIcon.png-f02b401fdeb8db90238371e936734b00.ctex"]
 
 [params]
 

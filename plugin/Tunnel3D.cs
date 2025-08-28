@@ -1,18 +1,18 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-
-
 /// <summary>
 /// Generates 3D tunnels based on input parameters.
 /// </summary>
 [Tool]
 public partial class Tunnel3D : Node3D
 {
+
     private Tunnel3DMeshData _meshData = new Tunnel3DMeshData();
     private Tunnel3DVoxelData _voxelData = new Tunnel3DVoxelData();
     private Tunnel3DGenerationData _tunnelData = new Tunnel3DGenerationData();
     private Tunnel3DConnectionGenerator _generator = new Tunnel3DConnectionGenerator();
+
     private Node3D tunnelContainer = new Node3D();
     private Queue<Action> taskQueue = new Queue<Action>();
 
@@ -28,46 +28,43 @@ public partial class Tunnel3D : Node3D
     /// <summary>
     /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Generation_Data"/>
     /// </summary>
-    [ExportGroup("Tunnel Data")]
-    [Export]
-    public Resource Connection_Generator // Can't be set to Tunnel3DGenerationData due to editor limitations.
+    [ExportGroup("Tunnel Data"), Export(PropertyHint.ResourceType, "Tunnel3DConnectionGenerator")]
+    public Tunnel3DConnectionGenerator Connection_Generator
     {
         get { return _generator; }
-        set { _generator = value as Tunnel3DConnectionGenerator; } // Workaround due to editor not considering "Tunnel3DConnectionGenerator" it's own type.
+        set { _generator = value; }
     }
     /// <summary>
     /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Voxel_Data"/>
     /// </summary>
-    [Export]
-    public Resource Tunnel_Generation_Data // Same here.
+    [Export(PropertyHint.ResourceType,"Tunnel3DGenerationData")]
+    public Tunnel3DGenerationData Tunnel_Generation_Data
     {
         get { return _tunnelData; }
-        set { _tunnelData = value as Tunnel3DGenerationData; }
+        set { _tunnelData = value; }
     }
     /// <summary>
     /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Mesh_Data"/>
     /// </summary>
-    [Export]
-    public Resource Tunnel_Voxel_Data // Same here.
+    [Export(PropertyHint.ResourceType,"Tunnel3DVoxelData")]
+    public Tunnel3DVoxelData Tunnel_Voxel_Data
     {
         get { return _voxelData; }
-        set { _voxelData = value as Tunnel3DVoxelData; }
+        set { _voxelData = value; }
     }
     /// <summary>
     /// Resource that stores data that displays the tunnel meshes.
     /// </summary>
-    [Export]
-    public Resource Tunnel_Mesh_Data // you get the idea
+    [Export(PropertyHint.ResourceType, "Tunnel3DMeshData")]
+    public Tunnel3DMeshData Tunnel_Mesh_Data
     {
         get { return _meshData; }
-        set { _meshData = value as Tunnel3DMeshData; }
+        set { _meshData = value; }
     }
     /// <summary>
     /// Generate Trimesh collisions for each chunk. <see cref="Tunnel3D.GenerateMeshChildren"/> will need to be called after setting.
     /// </summary>
-    [ExportGroup("Tunnel Options")]
-    [ExportSubgroup("Physics")]
-    [Export]
+    [ExportGroup("Tunnel Options"), ExportSubgroup("Physics"), Export]
     public bool Generate_Collision_Meshes
     {
         get { return _generateCollisionMeshes; }
@@ -94,29 +91,28 @@ public partial class Tunnel3D : Node3D
     /// <summary>
     /// Callable that encapsulates <see cref="Tunnel3D.GenerateTunnelData"/>
     /// </summary>
-    [ExportGroup("Actions")]
-    [ExportToolButton("Generate Tunnel Data")]
-    public Callable GenerateTunnelDataCallable => Callable.From(() => QueueTask(GenTunnelData)); //GenTunnelData
+    [ExportGroup("Actions"), ExportToolButton("Generate Tunnel Data")]
+    public Callable GenerateTunnelDataCallable => Callable.From(() => QueueTask(GenTunnelData));
     /// <summary>
     /// Callable that encapsulates <see cref="Tunnel3D.GenerateVoxelData"/>
     /// </summary>
     [ExportToolButton("Generate Voxel Data")]
-    public Callable GenerateVoxelDataCallable => Callable.From(() => QueueTask(GenVoxelData)); //GenVoxelData
+    public Callable GenerateVoxelDataCallable => Callable.From(() => QueueTask(GenVoxelData));
     /// <summary>
     /// Callable that encapsulates <see cref="Tunnel3D.GenerateTunnelMesh"/>
     /// </summary>
     [ExportToolButton("Generate Tunnel Mesh")]
-    public Callable GenerateTunnelMeshCallable => Callable.From(() => QueueTask(GenTunnelMesh)); //GenTunnelMesh
+    public Callable GenerateTunnelMeshCallable => Callable.From(() => QueueTask(GenTunnelMesh));
     /// <summary>
     /// Callable that encapsulates <see cref="Tunnel3D.GenerateMeshChildren"/>
     /// </summary>
     [ExportToolButton("Generate Mesh Children")]
-    public Callable GenerateMeshChildrenCallable => Callable.From(() => QueueTask(GenMeshChildren)); //GenMeshChildren
+    public Callable GenerateMeshChildrenCallable => Callable.From(() => QueueTask(GenMeshChildren));
     /// <summary>
     /// Callable that encapsulates <see cref="Tunnel3D.DestroyMeshChildren"/>
     /// </summary>
     [ExportToolButton("Destroy Mesh Children")]
-    public Callable DestroyMeshChildrenCallable => Callable.From(() => QueueTask(DestroyChildren)); //DestroyChildren
+    public Callable DestroyMeshChildrenCallable => Callable.From(() => QueueTask(DestroyChildren));
     /// <summary>
     /// Updates <see cref="Tunnel3D.Tunnel_Generation_Data"/> tunnel connections from data in <see cref="Tunnel3D.Connection_Generator"/>
     /// </summary>
