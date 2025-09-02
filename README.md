@@ -10,7 +10,7 @@ Install Instructions:
    <img width="410" height="353" alt="image" src="https://github.com/user-attachments/assets/dab61735-a6ed-4c9a-b4ea-873deeaeeb2b" />
 
 
-3. Create a folder in the Godot Editor named "addons", in res:// and move the Tunnel3D(-main) folder into the addons folder.
+3. Create a folder in the Godot Editor named "addons" in res:// and move the Tunnel3D(-main) folder into the addons folder.
    
    <img width="256" height="207" alt="image" src="https://github.com/user-attachments/assets/77552851-316a-4059-80ff-10cab4a9eab8" />
 
