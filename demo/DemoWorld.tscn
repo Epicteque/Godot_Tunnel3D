@@ -34,22 +34,23 @@ GeneratedConnectionCount = 8
 TestIntersections = true
 ThresholdRadius = 3.0
 Seed = 0
-NodeSeperationDistance = 4.0
-ElevationAspect = 1.0
+NodeSeperationDistance = 6.0
+ElevationAspect = 10.0
 metadata/_custom_type_script = "uid://b0qihc36fagg5"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_y15co"]
+noise_type = 0
 
-[sub_resource type="Curve" id="Curve_1xq81"]
+[sub_resource type="Curve" id="Curve_7xu1f"]
 _data = [Vector2(0.6, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_y15co"]
 script = ExtResource("4_euer0")
 Noise = SubResource("FastNoiseLite_y15co")
-NoiseIntensity = 0.4
+NoiseIntensity = 0.607
 TunnelRadius = 1.3
-TunnelEaseFunction = SubResource("Curve_1xq81")
+TunnelEaseFunction = SubResource("Curve_7xu1f")
 TunnelNodes = PackedVector3Array()
 AdjacencyMatrix = PackedByteArray()
 WeightMatrix = PackedFloat32Array()

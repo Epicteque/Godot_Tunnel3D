@@ -37,7 +37,7 @@ public partial class Tunnel3D : Node3D
     /// <summary>
     /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Voxel_Data"/>
     /// </summary>
-    [Export(PropertyHint.ResourceType,"Tunnel3DGenerationData")]
+    [Export(PropertyHint.ResourceType, "Tunnel3DGenerationData")]
     public Tunnel3DGenerationData Tunnel_Generation_Data
     {
         get { return _tunnelData; }
@@ -46,7 +46,7 @@ public partial class Tunnel3D : Node3D
     /// <summary>
     /// Resource that stores data that generates <see cref="Tunnel3D.Tunnel_Mesh_Data"/>
     /// </summary>
-    [Export(PropertyHint.ResourceType,"Tunnel3DVoxelData")]
+    [Export(PropertyHint.ResourceType, "Tunnel3DVoxelData")]
     public Tunnel3DVoxelData Tunnel_Voxel_Data
     {
         get { return _voxelData; }

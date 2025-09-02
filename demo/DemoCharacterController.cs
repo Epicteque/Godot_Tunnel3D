@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+// Simple Character Controller for Demonstration Purposes
 public partial class DemoCharacterController : CharacterBody3D
 {
     private Camera3D camera;
@@ -54,13 +54,13 @@ public partial class DemoCharacterController : CharacterBody3D
     {
         if (!Enabled) { return; }
 
-        camera.Rotation = camera.Rotation with { X = Math.Clamp(camera.Rotation.X - mouseDelta.Y, -1.3f, 1.3f), Y = (camera.Rotation.Y - mouseDelta.X)};
+        camera.Rotation = camera.Rotation with { X = Math.Clamp(camera.Rotation.X - mouseDelta.Y, -1.3f, 1.3f), Y = (camera.Rotation.Y - mouseDelta.X) };
         mouseDelta = Vector2.Zero;
 
         Vector2 input = Input.GetVector("DemoCharacter_Left", "DemoCharacter_Right", "DemoCharacter_Backward", "DemoCharacter_Forward");
 
-        Vector3 movement = (camera.GlobalBasis.X with { X = camera.GlobalBasis.X.X, Z = camera.GlobalBasis.X.Z }) * input.X + (camera.GlobalBasis.X with { X = camera.GlobalBasis.X.Z, Z = -camera.GlobalBasis.X.X }) * input.Y ;
-        Vector3 velocity = Velocity.MoveToward((movement * 3.0f), (float)delta * 10.0f) * new Vector3(1,0,1);
+        Vector3 movement = (camera.GlobalBasis.X with { X = camera.GlobalBasis.X.X, Z = camera.GlobalBasis.X.Z }) * input.X + (camera.GlobalBasis.X with { X = camera.GlobalBasis.X.Z, Z = -camera.GlobalBasis.X.X }) * input.Y;
+        Vector3 velocity = Velocity.MoveToward((movement * 3.0f), (float)delta * 10.0f) * new Vector3(1, 0, 1);
 
         Velocity = velocity + Vector3.Up * (Velocity.Y - 9.81f * (float)delta);
 

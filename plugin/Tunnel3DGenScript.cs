@@ -268,11 +268,11 @@ public partial class Tunnel3D : Node3D
                     index = x + y * voxelDimensions.X + z * voxelDimensions.X * voxelDimensions.Y;
 
                     normalisedTunnelDist = Line.DistanceLineToPoint(AABB.Tunnel, position) / _tunnelData.TunnelRadius;
-                    weightValue = _tunnelData.TunnelEaseFunction.SampleBaked(Math.Clamp(normalisedTunnelDist, 0.0f, 1.0f));
+                    weightValue = _tunnelData.TunnelEaseFunction.Sample(Math.Clamp(normalisedTunnelDist, 0.0f, 1.0f));
 
                     if (normalisedTunnelDist < 1.0f && processNoise)
                     {
-                        weightValue += (((_tunnelData.Noise.GetNoise3Dv(position) + 1.0f) / 2.0f) * _tunnelData.NoiseIntensity);
+                        weightValue += (((_tunnelData.Noise.GetNoise3Dv(position * 100.0f) + 1.0f) / 2.0f) * _tunnelData.NoiseIntensity); // 100x multiplier to noise because noise has max frequency of 1.0, and at that frequency, the best results are found.
                     }
 
                     lock (lockObj) // gotta love race conditions
@@ -325,14 +325,18 @@ public partial class Tunnel3D : Node3D
                 };
 
                 isValid = true;
-                for (int node = 0; node < i; node++)
+                for (int node1 = 0; node1 < i; node1++)
                 {
-                    isValid &= (randomCoordinate - nodes[node]).Length() > seperationDistance;
+                    for (int node2 = node1 + 1; node2 < i; node2++)
+                    {
+                        isValid &= Line.DistanceLineToPoint(new Line(nodes[node1], nodes[node2]), randomCoordinate) > seperationDistance;
+
+                        if (!isValid) { break; }
+                    }
                     if (!isValid) { break; }
                 }
                 iterations++;
             } while (!isValid);
-
             nodes[i] = randomCoordinate;
         }
         if (nodeCount < 2) { return; }

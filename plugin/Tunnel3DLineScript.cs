@@ -18,7 +18,7 @@ public partial class Tunnel3D : Node3D
             float t_UNIT = dotProdConstCoef / dotProdTCoef;
 
             Vector3 nearestPointOnLine = l + (t * Math.Clamp(t_UNIT, 0, 1));
-            
+
             return DistancePointToPoint(nearestPointOnLine, point);
         }
 

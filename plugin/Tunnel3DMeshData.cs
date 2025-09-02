@@ -17,6 +17,4 @@ public partial class Tunnel3DMeshData : Resource
     [Export]
     public BaseMaterial3D TunnelMaterial { get; set; }
 
-    
-
 }

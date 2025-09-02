@@ -29,6 +29,9 @@ public partial class Tunnel3DVoxelData : Resource
     [Export]
     public byte[] VoxelWeights { get; set; }
 
+    /// <summary>
+    /// The value compared against the voxel weights to determine tunnel level displayed
+    /// </summary>
     [ExportSubgroup("Mesh Generator")]
     [Export(PropertyHint.Range, "0,1")]
     public float TunnelLevel { get; set; } = 0.5f;

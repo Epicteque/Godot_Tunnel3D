@@ -18,8 +18,6 @@ public partial class Tunnel3DPlugin : EditorPlugin
 
         AddCustomType("Tunnel3D", "Node3D", (Script)ResourceLoader.Load($"{localDir}/Tunnel3D.cs"), (Texture2D)ResourceLoader.Load($"{localDir}/Tunnel3DIcon.png"));
         AddCustomType("Tunnel3D", "Node3D", (Script)ResourceLoader.Load($"{localDir}/Tunnel3DGenScript.cs"), (Texture2D)ResourceLoader.Load($"{localDir}/Tunnel3DIcon.png"));
-
-       
     }
 
     public override void _ExitTree()
