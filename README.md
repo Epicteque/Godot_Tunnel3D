@@ -34,4 +34,22 @@ ERROR WORKAROUND:
    <img width="432" height="251" alt="image" src="https://github.com/user-attachments/assets/d723ebf8-7525-4d92-a527-82c6de383f02" />
 
 
-5. 
+5. Find the new node "Tunnel3D" and new resources "Tunnel3DConnectionGenerator", "Tunnel3DGenerationData", "Tunnel3DMeshData" and "Tunnel3DVoxelData".
+
+
+Basic Use Instructions:
+
+1. Create a Tunnel3D node in the Scene Tree.
+   
+   <img width="269" height="89" alt="image" src="https://github.com/user-attachments/assets/5597fdb4-453e-492e-8759-123795665301" />
+
+
+2. Fill the Exported Resources in the Inspector with the associated tunnel generation information.
+   
+<img width="276" height="334" alt="image" src="https://github.com/user-attachments/assets/03f6898c-97c1-467c-82bc-2323cd4e1a5f" />
+
+
+4. Press the Tool Buttons in the Inspector in the following order if you intend to use all the functionality. "Generate Tunnel Data", "Generate Voxel Data", "Generate Tunnel Mesh", "Generate Mesh Children"
+
+
+5. Wait until the Tunnel has generated.
