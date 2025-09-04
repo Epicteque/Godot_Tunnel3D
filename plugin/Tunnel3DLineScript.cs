@@ -242,7 +242,7 @@ public partial class Tunnel3D : Node3D
 
 
 
-            GD.Print(distanceValue);
+            //GD.Print(distanceValue);
 
             float[] tValues = new float[2] { tValue, tValue2 };
 

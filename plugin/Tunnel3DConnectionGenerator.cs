@@ -1,4 +1,5 @@
 using Godot;
+using System;
 /// <summary>
 /// <para>Responsible for storing data for generating <see cref="Tunnel3DGenerationData"/> based on input parameters</para>
 /// </summary>
@@ -10,6 +11,7 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// </summary>
     [ExportGroup("Node Generation"), ExportSubgroup("Bounds"), Export]
     public Vector3 BoundsLowerCorner { get; set; } = new Vector3(-8, -8, -8);
+
     /// <summary>
     /// Defines the Upper Corner of the Bounding Box the tunnel nodes are to generate in.
     /// </summary>
@@ -24,22 +26,37 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// Count of nodes randomly generated in the tunnel system. Total node count includes <see cref="PresetNodes"/> and GeneratedNodeCount.
     /// </summary>
     [Export(PropertyHint.Range, "0,16,1,or_greater")]
-    public int GeneratedNodeCount { get; set; }
+    public int GeneratedNodeCount
+    {
+        get { return _generatedNodeCount; }
+        set { _generatedNodeCount = Math.Max(0, value); }
+    }
+    private int _generatedNodeCount = 0;
     /// <summary>
     /// Count of tunnel connections in the tunnel system. Note: Regardless of specified tunnel connection count, it will always generate a tunnel system with all nodes connected.
     /// </summary>
     [Export(PropertyHint.Range, "0,15,1,or_greater")]
-    public int GeneratedConnectionCount { get; set; }
+    public int GeneratedConnectionCount
+    {
+        get { return _generatedConnectionCount; }
+        set { _generatedConnectionCount = Math.Max(0, value); }
+    }
+    private int _generatedConnectionCount = 0;
     /// <summary>
     /// Test for tunnel collisions. Generated connections will exclude tunnel collisions.
     /// </summary>
     [Export]
     public bool TestIntersections { get; set; } = true;
     /// <summary>
-    /// Radius threshold between 2 tunnels that must be exceeded to be considered a tunnel intersection.
+    /// The radius threshold between 2 tunnels that must be met to be considered a tunnel intersection.
     /// </summary>
-    [Export]
-    public float ThresholdRadius { get; set; } = 3.0f;
+    [Export(PropertyHint.Range,"0,5,or_greater")]
+    public float ThresholdRadius
+    {
+        get { return _thresholdRadius; }
+        set { _thresholdRadius = Math.Max(0, value); }
+    }
+    private float _thresholdRadius = 3.0f;
     /// <summary>
     /// Seed used to generate cave node positions.
     /// </summary>
@@ -48,11 +65,17 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// <summary>
     /// The distance randomly generated points will attempt to generate from eachother
     /// </summary>
-    [Export]
+    [Export(PropertyHint.Range,"0,5,or_greater")]
     public float NodeSeperationDistance { get; set; }
     /// <summary>
-    /// Scales the calculated weights by the elevation angle between the two nodes. Higher values tend to reduce tunnel elevation in elevation to produce more a accessible tunnel system.
+    /// A heuristic that scales the calculated weights by the elevation angle between the two nodes.
+    /// <br></br>Higher values tend to reduce tunnel elevation to produce more a traversable tunnel system.
     /// </summary>
     [ExportGroup("Weight Options"), Export(PropertyHint.Range, "0,1,0.01,or_greater")]
-    public float ElevationAspect { get; set; }
+    public float ElevationAspect
+    {
+        get { return _elevationAspect; }
+        set { _elevationAspect = Math.Max(0, value); }
+    }
+    private float _elevationAspect = 0.0f;
 }

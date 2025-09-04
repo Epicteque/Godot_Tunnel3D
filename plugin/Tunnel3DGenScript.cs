@@ -7,7 +7,7 @@ public partial class Tunnel3D : Node3D
     private async void QueueTask(Action action)
     {
         if (taskQueue.Count == 0) { doingTasks = false; }
-        taskQueue.Enqueue(action);
+        taskQueue.Enqueue(() => { methodRunFlag = true; action(); }); // I hope it works
         if (!doingTasks && taskQueue.Count > 0)
         {
             doingTasks = true;
@@ -22,6 +22,7 @@ public partial class Tunnel3D : Node3D
         while (taskQueue.Count > 0)
         {
             taskQueue.Peek().Invoke();
+            GD.Print(taskQueue.Count);
             await Task.Run(WaitForCompletion);
             taskQueue.Dequeue();
         }
@@ -36,25 +37,29 @@ public partial class Tunnel3D : Node3D
 
     private void GenTunnelMesh()
     {
-        methodRunFlag = true;
         if (!IsNodeReady())
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D not initialised");
         }
         if (_meshData == null)
         {
+            methodRunFlag = false;
             throw new NullReferenceException("Tunnel3D Mesh Data Resource is null");
         }
         if (_voxelData == null)
         {
+            methodRunFlag = false;
             throw new NullReferenceException("Tunnel3D Voxel Data Resource is null");
         }
         if (_voxelData.VoxelWeights is null)
         {
+            methodRunFlag = false;
             throw new NullReferenceException("Tunnel3D MeshData.VoxelWeights Array is null");
         }
         if (_voxelData.VoxelWeights.Length != _voxelData.ChunkCount.X * _voxelData.ChunkCount.Y * _voxelData.ChunkCount.Z * _voxelData.VoxelCount.X * _voxelData.VoxelCount.Y * _voxelData.VoxelCount.Z)
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D VoxelWeights.Length mismatch with voxel and chunk count. Re-generate Generation Data.");
         }
 
@@ -67,9 +72,8 @@ public partial class Tunnel3D : Node3D
 
     private async void GenTunnelData()
     {
-        methodRunFlag = true;
-        if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
-        if (_tunnelData is null) { throw new NullReferenceException("Tunnel3D Generation Data Resource is null"); }
+        if (!IsNodeReady()) { methodRunFlag = false; throw new Exception("Tunnel3D not initialised"); }
+        if (_tunnelData is null) { methodRunFlag = false; throw new NullReferenceException("Tunnel3D Generation Data Resource is null"); }
         if (!(_generator is null))
         {
             int count = _generator.GeneratedNodeCount;
@@ -84,17 +88,18 @@ public partial class Tunnel3D : Node3D
                 _tunnelData.TunnelNodes = new Vector3[0];
                 _tunnelData.AdjacencyMatrix = new byte[0];
                 _tunnelData.WeightMatrix = new float[0];
-                methodRunFlag = false;
                 GD.PushWarning("Tunnel3D Data Generator generates zero nodes. Generating empty Generation Data Resource.");
                 return;
             }
             else
             {
                 await Task.Run(GenerateGenerationData);
+                methodRunFlag = false;
             }
         }
-        if ((_tunnelData.TunnelNodes is null || _tunnelData.AdjacencyMatrix is null || _tunnelData.WeightMatrix is null))
+        else if ((_tunnelData.TunnelNodes is null || _tunnelData.AdjacencyMatrix is null || _tunnelData.WeightMatrix is null))
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D Generation Data Resource data is incomplete.");
         }
         methodRunFlag = false;
@@ -102,11 +107,10 @@ public partial class Tunnel3D : Node3D
 
     private void GenMeshChildren()
     {
-        methodRunFlag = true;
-        if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
+        if (!IsNodeReady()) { methodRunFlag = false; throw new Exception("Tunnel3D not initialised"); }
         if (tunnelContainer.GetParent() is null) { AddChild(tunnelContainer); }
-        if (_meshData is null) { throw new NullReferenceException("Tunnel3D Mesh Data Resource is null"); }
-        if (_meshData.TunnelMeshes is null) { throw new NullReferenceException("Tunnel3D MeshData.TunnelMeshes is null"); }
+        if (_meshData is null) { methodRunFlag = false; throw new NullReferenceException("Tunnel3D Mesh Data Resource is null"); }
+        if (_meshData.TunnelMeshes is null) { methodRunFlag = false; throw new NullReferenceException("Tunnel3D MeshData.TunnelMeshes is null"); }
 
         int chunkCount;
         try
@@ -122,7 +126,11 @@ public partial class Tunnel3D : Node3D
             chunkCount = _meshData.TunnelMeshes.Count;
         }
 
-        DestroyChildren();
+        foreach (var child in tunnelContainer.GetChildren())
+        {
+            tunnelContainer.RemoveChild(child);
+            child.Free();
+        }
         MeshInstance3D[] chunks = new MeshInstance3D[chunkCount];
 
         for (int i = 0; i < chunkCount; i++)
@@ -144,7 +152,7 @@ public partial class Tunnel3D : Node3D
         {
             try // Return if empty/null
             {
-                if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { return; }
+                if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { methodRunFlag = false; return; }
             }
             catch { return; }
             chunks[i].CreateTrimeshCollision(); // Really expensive. Adds children, so must be run on main thread, meaning this is blocking.
@@ -161,9 +169,9 @@ public partial class Tunnel3D : Node3D
 
     private void DestroyChildren()
     {
-        methodRunFlag = true;
         if (!IsNodeReady())
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D not initialised");
         }
 
@@ -177,27 +185,47 @@ public partial class Tunnel3D : Node3D
 
     private void GenVoxelData()
     {
-        methodRunFlag = true;
         if (!IsNodeReady())
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D not initialised");
         }
         if (_voxelData is null)
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D Voxel Data Resource is null");
         }
         if (_tunnelData is null)
         {
+            methodRunFlag = false;
             throw new Exception("Tunnel3D Generation Data Resource is null");
         }
+        if (_tunnelData.AdjacencyMatrix is null)
+        {
+            methodRunFlag = false;
+            throw new Exception("Tunnel3D GenerationData.AdjacencyMatrix is null");
+        }
+
+        if (_tunnelData.TunnelEaseFunction is null)
+        {
+            methodRunFlag = false;
+            throw new Exception("Tunnel3D GenerationData.TunnelEaseFunction is null.");
+        }
+
         if (_tunnelData.TunnelNodes is null)
         {
-            GD.PushWarning("Tunnel3D Generation.TunnelNodes is null. Generating empty voxel grid.");
+            GD.PushWarning("Tunnel3D GenerationData.TunnelNodes is null. Generating empty voxel grid.");
         }
         else if (_tunnelData.TunnelNodes.Length == 0)
         {
-            GD.PushWarning("Tunnel3D Generation.TunnelNodes is null. Generating empty voxel grid.");
+            GD.PushWarning("Tunnel3D GenerationData.TunnelNodes is null. Generating empty voxel grid.");
         }
+        else if (_tunnelData.TunnelNodes.Length * _tunnelData.TunnelNodes.Length != (_tunnelData.AdjacencyMatrix?.Length ?? 0))
+        {
+            methodRunFlag = false;
+            throw new Exception("Tunnel3D Adjacency Matrix mismatch with Tunnel Node count.");
+        }
+
         byte[] weights = new byte[_voxelData.ChunkCount.X * _voxelData.VoxelCount.X * _voxelData.ChunkCount.Y * _voxelData.VoxelCount.Y * _voxelData.ChunkCount.Z * _voxelData.VoxelCount.Z];
         List<(Line Tunnel, Vector3I Corner1AABB, Vector3I Corner2AABB)> tunnels = new List<(Line Tunnel, Vector3I Corner1AABB, Vector3I Corner2AABB)>();
 
@@ -301,7 +329,6 @@ public partial class Tunnel3D : Node3D
         byte[] adjacencyMatrix = new byte[nodeCount * nodeCount];
         float[] weightMatrix = new float[nodeCount * nodeCount];
 
-        int[,] intersectionMatrix = new int[nodeCount, nodeCount];
         Vector3[] nodes = new Vector3[nodeCount];
 
         if (!nodeEmpty)

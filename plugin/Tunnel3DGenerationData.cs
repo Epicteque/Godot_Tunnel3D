@@ -1,5 +1,5 @@
 using Godot;
-
+using System;
 /// <summary>
 /// <para>Responsible for storing all data for generating <see cref="Tunnel3DVoxelData">.</para>
 /// </summary>
@@ -9,14 +9,28 @@ public partial class Tunnel3DGenerationData : Resource
     /// <summary>
     /// Optional Noise added during the generation of the tunnels to vary cave surface.
     /// </summary>
-    [ExportGroup("Noise")]
-    [Export]
+    [ExportGroup("Noise"), Export]
     public FastNoiseLite Noise { get; set; }
+
     [Export(PropertyHint.Range, "0,1")]
-    public float NoiseIntensity { get; set; }
-    [ExportGroup("Tunnel Radius")]
-    [Export(PropertyHint.Range, "0,10,0.05,or_greater,exp")]
-    public float TunnelRadius { get; set; } = 1.0f;
+    public float NoiseIntensity
+    {
+        get { return _noiseIntensity; }
+        set { _noiseIntensity = Math.Clamp(value, 0.0f, 1.0f); }
+    }
+    private float _noiseIntensity = 0.0f;
+    /// <summary>
+    /// Determines the surrounding voxel radius that weights will be calculated in from the tunnel line.
+    /// <br></br>Note: Not the effective tunnel radius. Real tunnel radius will be affected by <see cref="TunnelEaseFunction"/>.
+    /// </summary>
+    [ExportGroup("Tunnel Radius"), Export(PropertyHint.Range, "0,10,0.05,or_greater,exp")]
+    public float TunnelRadius
+    {
+        get { return _tunnelRadius; }
+        set { _tunnelRadius = Math.Max(value, 0.0f); }
+    }
+    private float _tunnelRadius = 1.0f;
+
     /// <summary>
     /// Ease function scales tunnel voxel value as it gets away from the centre of the tunnel.
     /// </summary>
@@ -36,9 +50,10 @@ public partial class Tunnel3DGenerationData : Resource
     /// A flattened adjacency matrix of the tunnel network
     /// </summary>
     [Export]
-    public byte[] AdjacencyMatrix { get; set; } // as memory efficient as bool[] but accessible in Godot Editor 
+    public byte[] AdjacencyMatrix { get; set; } // as memory efficient as bool[] but still accessible in Godot Editor 
     /// <summary>
     /// A flattened weight matrix of the tunnel network. Does not consider tunnel intersections as part of weight.
+    /// <br></br>Note: This is functionally read-only. Changing this array will not affect tunnel generation.
     /// </summary>
     [Export]
     public float[] WeightMatrix { get; set; }

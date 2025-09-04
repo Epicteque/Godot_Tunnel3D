@@ -13,6 +13,7 @@ public partial class Tunnel3DMeshData : Resource
 
     /// <summary>
     /// Stores the material of the tunnel meshes.
+    /// <br></br>Note: Generated meshes are not UV mapped, hence triplanar mapping will need to be used.
     /// </summary>
     [Export]
     public BaseMaterial3D TunnelMaterial { get; set; }
