@@ -22,7 +22,6 @@ public partial class Tunnel3D : Node3D
         while (taskQueue.Count > 0)
         {
             taskQueue.Peek().Invoke();
-            GD.Print(taskQueue.Count);
             await Task.Run(WaitForCompletion);
             taskQueue.Dequeue();
         }
@@ -89,6 +88,7 @@ public partial class Tunnel3D : Node3D
                 _tunnelData.AdjacencyMatrix = new byte[0];
                 _tunnelData.WeightMatrix = new float[0];
                 GD.PushWarning("Tunnel3D Data Generator generates zero nodes. Generating empty Generation Data Resource.");
+                methodRunFlag = false;
                 return;
             }
             else
@@ -146,13 +146,13 @@ public partial class Tunnel3D : Node3D
 
         }
 
-        if (!_generateCollisionMeshes) { return; }
+        if (!_generateCollisionMeshes) { methodRunFlag = false; return; }
 
         Callable collisionGen = Callable.From<int>((i) =>
         {
             try // Return if empty/null
             {
-                if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { methodRunFlag = false; return; }
+                if (_meshData.TunnelMeshes[i].GetSurfaceCount() == 0) { return; }
             }
             catch { return; }
             chunks[i].CreateTrimeshCollision(); // Really expensive. Adds children, so must be run on main thread, meaning this is blocking.
