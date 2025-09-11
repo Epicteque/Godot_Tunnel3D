@@ -50,7 +50,7 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// <summary>
     /// The radius threshold between 2 tunnels that must be met to be considered a tunnel intersection.
     /// </summary>
-    [Export(PropertyHint.Range,"0,5,or_greater")]
+    [Export(PropertyHint.Range, "0,5,or_greater")]
     public float ThresholdRadius
     {
         get { return _thresholdRadius; }
@@ -65,8 +65,13 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// <summary>
     /// The distance randomly generated points will attempt to generate from eachother
     /// </summary>
-    [Export(PropertyHint.Range,"0,5,or_greater")]
-    public float NodeSeperationDistance { get; set; }
+    [Export(PropertyHint.Range, "0,5,or_greater")]
+    public float NodeSeperationDistance
+    {
+        get { return _nodeSeperationDistance; }
+        set { _nodeSeperationDistance = Math.Min(0.0f, value); }
+    }
+    private float _nodeSeperationDistance = 0.0f;
     /// <summary>
     /// A heuristic that scales the calculated weights by the elevation angle between the two nodes.
     /// <br></br>Higher values tend to reduce tunnel elevation to produce more a traversable tunnel system.
