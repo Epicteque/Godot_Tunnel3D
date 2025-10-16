@@ -49,7 +49,7 @@ Basic Use Instructions:
 <img width="276" height="334" alt="image" src="https://github.com/user-attachments/assets/03f6898c-97c1-467c-82bc-2323cd4e1a5f" />
 
 
-3. Press the Tool Buttons in the Inspector in the following order if you intend to use all the functionality. "Generate Tunnel Data", "Generate Voxel Data", "Generate Tunnel Mesh", "Generate Mesh Children"
+3. Press the Tool Buttons in the Inspector in the following order to test tunnel generation. "Generate Tunnel Data", "Generate Voxel Data", "Generate Tunnel Mesh", "Generate Mesh Children".
 
 
 4. Wait until the Tunnel has generated.
