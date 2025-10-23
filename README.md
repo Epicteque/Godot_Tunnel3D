@@ -2,7 +2,7 @@ Tunnel3D is a plugin for Godot Game Engine which adds 1 new node and 4 new resou
 
 Install Instructions:
 
-1. Ensure you have Godot MONO v4.4+ installed
+1. Ensure you have Godot MONO v4.4+ (and .NET 8.0+) installed
 
 
 2. Download the contents of this repo
