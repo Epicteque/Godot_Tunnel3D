@@ -343,7 +343,7 @@ public partial class Tunnel3D : Node3D
             Vector3 randomCoordinate;
             do
             {
-                float seperationDistance = _generator.NodeSeperationDistance * Math.Clamp((10 - iterations) / 10.0f, 0.0f, 1.0f); // gradually reduces seperation distance to prevent infinite loop whilst producing acceptable result
+                float separationDistance = _generator.NodeSeparationDistance * Math.Clamp((10 - iterations) / 10.0f, 0.0f, 1.0f); // gradually reduces separation distance to prevent infinite loop whilst producing acceptable result
                 randomCoordinate = new Vector3
                 {
                     X = Mathf.Lerp(_generator.BoundsLowerCorner.X, _generator.BoundsUpperCorner.X, random.NextSingle()),
@@ -356,7 +356,7 @@ public partial class Tunnel3D : Node3D
                 {
                     for (int node2 = node1 + 1; node2 < i; node2++)
                     {
-                        isValid &= Line.DistanceLineToPoint(new Line(nodes[node1], nodes[node2]), randomCoordinate) > seperationDistance;
+                        isValid &= Line.DistanceLineToPoint(new Line(nodes[node1], nodes[node2]), randomCoordinate) > separationDistance;
 
                         if (!isValid) { break; }
                     }
