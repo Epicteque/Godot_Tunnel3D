@@ -66,10 +66,10 @@ public partial class Tunnel3DConnectionGenerator : Resource
     /// The distance randomly generated points will attempt to generate from eachother
     /// </summary>
     [Export(PropertyHint.Range, "0,5,or_greater")]
-    public float NodeSeperationDistance
+    public float NodeSeparationDistance
     {
-        get { return _nodeSeperationDistance; }
-        set { _nodeSeperationDistance = Math.Min(0.0f, value); }
+        get { return _nodeSeparationDistance; }
+        set { _nodeSeparationDistance = Math.Min(0.0f, value); }
     }
     private float _nodeSeperationDistance = 0.0f;
     /// <summary>
