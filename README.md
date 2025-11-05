@@ -35,7 +35,8 @@ ERROR WORKAROUND:
 
 
 
-5. Find the new node "Tunnel3D" and new resources "Tunnel3DConnectionGenerator", "Tunnel3DGenerationData", "Tunnel3DMeshData" and "Tunnel3DVoxelData".
+
+5. If the plugin has loaded, then one should be able to find the new node "Tunnel3D" and new resources "Tunnel3DConnectionGenerator", "Tunnel3DGenerationData", "Tunnel3DMeshData" and "Tunnel3DVoxelData".
 
 
 Basic Use Instructions:
