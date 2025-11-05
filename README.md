@@ -29,9 +29,10 @@ ERROR WORKAROUND:
    <img width="275" height="76" alt="image" src="https://github.com/user-attachments/assets/d962cf0f-891f-4282-a2d0-83a5acf2a356" />
 
 
-  If the Build button is not present, then you are either not on the MONO version of Godot, or you need to create at least one C# script to trigger the engine to create the necessary .csproj and .sln files. You may delete this script afterwards.
+  If the Build button is not present, then you are either not on the MONO version of Godot, or you need to create a C# solution by navigating to Project -> Tools -> C# -> Create C# Solution
 
-   <img width="432" height="251" alt="image" src="https://github.com/user-attachments/assets/d723ebf8-7525-4d92-a527-82c6de383f02" />
+   <img width="768" height="399" alt="image" src="https://github.com/user-attachments/assets/ae2633a0-e35b-4fb1-a318-9a8c62c7d11d" />
+
 
 
 5. Find the new node "Tunnel3D" and new resources "Tunnel3DConnectionGenerator", "Tunnel3DGenerationData", "Tunnel3DMeshData" and "Tunnel3DVoxelData".
