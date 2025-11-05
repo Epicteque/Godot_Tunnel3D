@@ -71,7 +71,7 @@ public partial class Tunnel3DConnectionGenerator : Resource
         get { return _nodeSeparationDistance; }
         set { _nodeSeparationDistance = Math.Min(0.0f, value); }
     }
-    private float _nodeSeperationDistance = 0.0f;
+    private float _nodeSeparationDistance = 0.0f;
     /// <summary>
     /// A heuristic that scales the calculated weights by the elevation angle between the two nodes.
     /// <br></br>Higher values tend to reduce tunnel elevation to produce more a traversable tunnel system.
