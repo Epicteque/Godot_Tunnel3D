@@ -69,7 +69,7 @@ public partial class Tunnel3DConnectionGenerator : Resource
     public float NodeSeparationDistance
     {
         get { return _nodeSeparationDistance; }
-        set { _nodeSeparationDistance = Math.Min(0.0f, value); }
+        set { _nodeSeparationDistance = Math.Max(0.0f, value); }
     }
     private float _nodeSeparationDistance = 0.0f;
     /// <summary>
