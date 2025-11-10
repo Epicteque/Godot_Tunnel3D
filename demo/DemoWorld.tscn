@@ -29,13 +29,13 @@ script = ExtResource("3_kv4js")
 BoundsLowerCorner = Vector3(-15, -3, -15)
 BoundsUpperCorner = Vector3(15, 3, 15)
 PresetNodes = PackedVector3Array(0, 0, 0)
-GeneratedNodeCount = 100
-GeneratedConnectionCount = 8
+GeneratedNodeCount = 9
+GeneratedConnectionCount = 11
 TestIntersections = true
 ThresholdRadius = 3.0
 Seed = 0
-NodeSeperationDistance = 0.0
-ElevationAspect = 0.0
+NodeSeperationDistance = 1.0
+ElevationAspect = 1.0
 metadata/_custom_type_script = "uid://b0qihc36fagg5"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_y15co"]
