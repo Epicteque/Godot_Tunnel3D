@@ -49,11 +49,6 @@ public partial class Tunnel3D : Node3D
         while (!PoolFinished || methodRunFlag) { }
     }
 
-    public override void _Process(double delta)
-    {
-        
-    }
-
     private void GenTunnelMesh()
     {
         if (!IsNodeReady())
