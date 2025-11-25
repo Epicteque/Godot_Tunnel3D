@@ -88,6 +88,7 @@ public partial class Tunnel3D : Node3D
     {
         if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
         if (_tunnelData is null) { throw new NullReferenceException("Tunnel3D Generation Data Resource is null"); }
+        if (_generator is null) { throw new NullReferenceException("Tunnel3D Connection Generator Resource is null"); }
         if (!(_generator is null))
         {
             int count = _generator.GeneratedNodeCount;
@@ -112,10 +113,10 @@ public partial class Tunnel3D : Node3D
                 methodRunFlag = false;
             }
         }
-        else if ((_tunnelData.TunnelNodes is null || _tunnelData.AdjacencyMatrix is null || _tunnelData.WeightMatrix is null))
+        else if (_tunnelData.TunnelNodes is null || _tunnelData.AdjacencyMatrix is null || _tunnelData.WeightMatrix is null)
         {
             
-            throw new Exception("Tunnel3D Generation Data Resource data is incomplete.");
+            throw new Exception("Tunnel3D Generation Data Resource data is incomplete or null.");
         }
         methodRunFlag = false;
     }
