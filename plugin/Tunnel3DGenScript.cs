@@ -372,7 +372,7 @@ public partial class Tunnel3D : Node3D
                     if (!isValid) { break; }
                 }
                 iterations++;
-            } while (!isValid || iterations < 10);
+            } while (!isValid && iterations < 10);
             nodes[i] = randomCoordinate;
         }
         if (nodeCount < 2) { return; }
