@@ -73,7 +73,7 @@ public partial class Tunnel3D : Node3D
         _meshData.TunnelMeshes.Resize(_voxelData.ChunkCount.X * _voxelData.ChunkCount.Y * _voxelData.ChunkCount.Z);
 
         taskID = WorkerThreadPool.AddGroupTask(Callable.From<int>(GenerateChunkMesh), _meshData.TunnelMeshes.Count);
-        
+        methodRunFlag = false;
     }
 
     private async void GenTunnelData()
