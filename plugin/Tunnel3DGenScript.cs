@@ -33,12 +33,9 @@ public partial class Tunnel3D : Node3D
                 taskQueue.Clear();
                 throw;
             }
-            finally
-            {
-                methodRunFlag = false;
-            }
             await Task.Run(WaitForCompletion);
             taskQueue.Dequeue();
+
         }
     }
 
