@@ -7,7 +7,7 @@ public partial class Tunnel3D : Node3D
     private async void QueueTask(Action action)
     {
         if (taskQueue.Count == 0) { doingTasks = false; }
-        taskQueue.Enqueue(() => { methodRunFlag = true; action(); }); // I hope it works
+        taskQueue.Enqueue(() => { methodRunFlag = true; action(); });
         if (!doingTasks && taskQueue.Count > 0)
         {
             doingTasks = true;
@@ -21,7 +21,6 @@ public partial class Tunnel3D : Node3D
     {
         while (taskQueue.Count > 0)
         {
-            
             try
             {
                 taskQueue.Peek().Invoke();
@@ -76,7 +75,7 @@ public partial class Tunnel3D : Node3D
         methodRunFlag = false;
     }
 
-    private async void GenTunnelData()
+    private void GenTunnelData()
     {
         if (!IsNodeReady()) { throw new Exception("Tunnel3D not initialised"); }
         if (_tunnelData is null) { throw new NullReferenceException("Tunnel3D Generation Data Resource is null"); }
@@ -101,8 +100,8 @@ public partial class Tunnel3D : Node3D
             }
             else
             {
-                await Task.Run(GenerateGenerationData);
-                methodRunFlag = false;
+                Task.Run(() => {GenerateGenerationData(); methodRunFlag = false;});
+                return;
             }
         }
         else if (_tunnelData.TunnelNodes is null || _tunnelData.AdjacencyMatrix is null || _tunnelData.WeightMatrix is null)
@@ -110,7 +109,7 @@ public partial class Tunnel3D : Node3D
             
             throw new Exception("Tunnel3D Generation Data Resource data is incomplete or null.");
         }
-        methodRunFlag = false;
+        
     }
 
     private void GenMeshChildren()
