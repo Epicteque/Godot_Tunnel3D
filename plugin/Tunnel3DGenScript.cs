@@ -203,9 +203,9 @@ public partial class Tunnel3D : Node3D
         {
             throw new Exception("Tunnel3D Generation Data Resource is null");
         }
-        if (_tunnelData.AdjacencyMatrix is null)
+        if (_tunnelData.AdjacencyMatrix is null || _tunnelData.AdjacencyMatrix.Length == 0)
         {
-            throw new Exception("Tunnel3D GenerationData.AdjacencyMatrix is null");
+            throw new Exception("Tunnel3D GenerationData.AdjacencyMatrix is null or empty");
         }
 
         if (_tunnelData.TunnelEaseFunction is null)
