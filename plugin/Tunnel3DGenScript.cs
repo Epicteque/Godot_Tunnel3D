@@ -509,10 +509,10 @@ public partial class Tunnel3D : Node3D
 
     private Vector3 GetRealCoordinateChunkOffsetFromChunkIndex(int i)
     {
-        int chunkX = i % (_meshData.TunnelChunks.ChunkCount.X);
-        int chunkY = i / _meshData.TunnelChunks.ChunkCount.X % (_meshData.TunnelChunks.ChunkCount.Y);
-        int chunkZ = i / _meshData.TunnelChunks.ChunkCount.X / _meshData.TunnelChunks.ChunkCount.Y % (_meshData.TunnelChunks.ChunkCount.Z);
-        return (new Vector3(chunkX, chunkY, chunkZ) / _meshData.TunnelChunks.ChunkCount - 0.5f * Vector3.One) * _meshData.TunnelVolume;
+        int chunkX = i % (_meshData.TunnelChunks.X);
+        int chunkY = i / _meshData.TunnelChunks.X % (_meshData.TunnelChunks.Y);
+        int chunkZ = i / _meshData.TunnelChunks.X / _meshData.TunnelChunks.Y % (_meshData.TunnelChunks.Z);
+        return (new Vector3(chunkX, chunkY, chunkZ) / _meshData.TunnelChunks - 0.5f * Vector3.One) * _meshData.TunnelVolume;
     }
 
     private Vector3 GetRealCoordinateFromChunk(Vector3 vec)
