@@ -39,6 +39,6 @@ public partial class Tunnel3DMeshData : Resource
         get { return _tunnelVolume; }
         set { _tunnelVolume = new Vector3 { X = MathF.Max(value.X, 0f), Y = MathF.Max(value.Y, 0f), Z = MathF.Max(value.Z, 0f) }; }
     }
-    private Vector3I _tunnelVolume = new Vector3(16, 16, 16);
+    private Vector3 _tunnelVolume = new Vector3(16f, 16f, 16f);
 
 }
