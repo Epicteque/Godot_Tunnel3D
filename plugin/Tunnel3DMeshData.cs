@@ -17,5 +17,11 @@ public partial class Tunnel3DMeshData : Resource
     /// </summary>
     [Export]
     public BaseMaterial3D TunnelMaterial { get; set; }
+    
+    /// <summary>
+    /// Stores how the mesh chunks are arranged
+    /// </summary>
+    [Export]
+    public Vector3I TunnelChunkArrangement { get; set; }
 
 }
