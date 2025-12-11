@@ -70,7 +70,8 @@ public partial class Tunnel3D : Node3D
 
         _meshData.TunnelMeshes = new Godot.Collections.Array<ArrayMesh>();
         _meshData.TunnelMeshes.Resize(_voxelData.ChunkCount.X * _voxelData.ChunkCount.Y * _voxelData.ChunkCount.Z);
-
+        _meshData.TunnelChunks = _voxelData.ChunkCount;
+        _meshData.TunnelVolume = _voxelData.VolumeSize;
         taskID = WorkerThreadPool.AddGroupTask(Callable.From<int>(GenerateChunkMesh), _meshData.TunnelMeshes.Count);
         methodRunFlag = false;
     }
@@ -122,7 +123,7 @@ public partial class Tunnel3D : Node3D
         int chunkCount;
         try
         {
-            chunkCount = _voxelData.ChunkCount.X * _voxelData.ChunkCount.Y * _voxelData.ChunkCount.Z;
+            chunkCount = _meshData.TunnelChunkArrangement.X * _meshData.TunnelChunkArrangement.Y * _meshData.TunnelChunkArrangement.Z;
             if (chunkCount != _meshData.TunnelMeshes.Count)
             {
                 GD.PushWarning("Tunnel3D ChunkCount and tunnel ArrayMesh count mismatch. Data is dirty, re-generate MeshData. Continuing with Generating Mesh Children.");
@@ -508,10 +509,10 @@ public partial class Tunnel3D : Node3D
 
     private Vector3 GetRealCoordinateChunkOffsetFromChunkIndex(int i)
     {
-        int chunkX = i % (_voxelData.ChunkCount.X);
-        int chunkY = i / _voxelData.ChunkCount.X % (_voxelData.ChunkCount.Y);
-        int chunkZ = i / _voxelData.ChunkCount.X / _voxelData.ChunkCount.Y % (_voxelData.ChunkCount.Z);
-        return (new Vector3(chunkX, chunkY, chunkZ) / _voxelData.ChunkCount - 0.5f * Vector3.One) * _voxelData.VolumeSize;
+        int chunkX = i % (_meshData.TunnelChunks.ChunkCount.X);
+        int chunkY = i / _meshData.TunnelChunks.ChunkCount.X % (_meshData.TunnelChunks.ChunkCount.Y);
+        int chunkZ = i / _meshData.TunnelChunks.ChunkCount.X / _meshData.TunnelChunks.ChunkCount.Y % (_meshData.TunnelChunks.ChunkCount.Z);
+        return (new Vector3(chunkX, chunkY, chunkZ) / _meshData.TunnelChunks.ChunkCount - 0.5f * Vector3.One) * _meshData.TunnelVolume;
     }
 
     private Vector3 GetRealCoordinateFromChunk(Vector3 vec)
