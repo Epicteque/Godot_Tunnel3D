@@ -1,4 +1,5 @@
 using Godot;
+using System;
 /// <summary>
 /// <para>Responsible for storing all mesh data used in <see cref="Tunnel3D"/> nodes.</para>
 /// </summary>
