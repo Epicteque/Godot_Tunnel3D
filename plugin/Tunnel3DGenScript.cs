@@ -123,7 +123,7 @@ public partial class Tunnel3D : Node3D
         int chunkCount;
         try
         {
-            chunkCount = _meshData.TunnelChunkArrangement.X * _meshData.TunnelChunkArrangement.Y * _meshData.TunnelChunkArrangement.Z;
+            chunkCount = _meshData.TunnelChunks.X * _meshData.TunnelChunks.Y * _meshData.TunnelChunks.Z;
             if (chunkCount != _meshData.TunnelMeshes.Count)
             {
                 GD.PushWarning("Tunnel3D ChunkCount and tunnel ArrayMesh count mismatch. Data is dirty, re-generate MeshData. Continuing with Generating Mesh Children.");
